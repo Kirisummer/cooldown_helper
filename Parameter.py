@@ -1,6 +1,5 @@
 #TODO check if works with float
 #TODO wrap with Decimal
-#TODO manual parameter change
 
 from typing import NamedTuple, List, Callable, Dict, Set, Tuple
 
@@ -46,13 +45,17 @@ class Parameter:
         if self.wait:
             self.wait -= 1
             return 
+        self.set_value(self.curr_val + self.delta)
 
-        next_val = self.curr_val + self.delta
-        if next_val < self.min:
-            next_val = self.min
-        elif next_val > self.max:
-            next_val = self.max
-        self.curr_val = next_val
+    def set_value(self, value: int):
+        if value < self.min:
+            value = self.min
+        elif value > self.max:
+            value = self.max
+        self.curr_val = value
+
+    def apply_delta(self, delta: int):
+        self.set_value(self.curr_val + delta)
 
     def apply_effect(self, effect: Effect):
         self.curr_val += effect.start_val_boost
@@ -100,6 +103,14 @@ class ParameterHolder(dict):
         else:
             lock = ParameterHolder.ParameterLock(parameter)
         super().__setitem__(name, lock)
+
+    def change_param(self, name: str, value: int):
+        lock = self[name]
+        lock.parameter.set_value(value)
+
+    def apply_delta(self, name: str, delta: int):
+        lock = self[name]
+        lock.parameter.apply_delta(delta)
 
     def add_effect(self, effect: Effect):
         self.effects.add(effect)

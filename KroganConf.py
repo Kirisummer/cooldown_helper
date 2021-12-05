@@ -23,8 +23,12 @@ config = {
 \
         'ShieldBoost': ConfigEntry('ShieldBoost', cooldown(10, 2)),
         'FirstAid': ConfigEntry('FirstAid', cooldown(10)),
+\
+        'Shotgun': ConfigEntry('Shotgun', ParameterConf(3, 0, 3, 0)),
+        'Rifle': ConfigEntry('Rifle', ParameterConf(30, 0, 30, 0)), #TODO change rifle ammo amount
+        'Pistol': ConfigEntry('Pistol', ParameterConf(12, 0, 12, 0)), #TODO change pistol ammo amount
 }
 
-action_handler = ActionHandler(holder, config, ['Heal', 'Shields'])
+action_handler = ActionHandler(holder, config, ['Heal', 'Shields', 'Shotgun', 'Rifle', 'Pistol'])
 tui = Tui(action_handler)
 tui.run()

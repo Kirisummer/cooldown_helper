@@ -2,6 +2,7 @@ class ActionHandler:
     LOCK_ACTIONS = '!lock', '!l'
     UNLOCK_ACTIONS = '!unlock', '!ul'
     NEXT_ACTIONS = '!next', '!n'
+    CHANGE_ACTIONS = '!change', '!c'
 
     def __init__(self, holder, config, init_actions):
         self.holder = holder
@@ -22,15 +23,36 @@ class ActionHandler:
         elif action in type(self).NEXT_ACTIONS:
             self.holder.next_action()
 
+        elif action in type(self).CHANGE_ACTIONS:
+            try:
+                self.change(args[0], args[1])
+            except IndexError:
+                print('Not enough arguments')
+
         else:
             self.run_action(action)
 
     def lock(self, pool: str, is_locked: bool):
         try:
             self.holder.set_locked(pool, is_locked)
-        except KeyError as e:
+        except KeyError:
             print('No such pool: ' + pool)
             return
+
+    def change(self, pool: str, value: str):
+        is_delta = (value[0] == 'd')
+        try:
+            self.holder[pool]
+        except KeyError:
+            print('No such pool: ' + pool)
+            return
+
+        if is_delta:
+            int_value = int(value[1:])
+            self.holder.apply_delta(pool, int_value)
+        else:
+            int_value = int(value)
+            self.holder.change_param(pool, int_value)
 
     def run_action(self, action: str):
         entry = self.config.get(action)
