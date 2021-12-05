@@ -1,21 +1,47 @@
-#TODO check if works with float
-#TODO wrap with Decimal
-
 from typing import NamedTuple, List, Callable, Dict, Set, Tuple
+from decimal import Decimal
 
+def modify_args(modifier, ignored: Tuple[str] = tuple()):
+    def decorator(named_tuple):
+        def wrapper(*args, **kwargs):
+            fields = named_tuple._fields
+            mapper = lambda field, arg: arg if field in ignored else modifier(arg)
+
+            modified_args = [
+                    mapper(fields[i], arg)
+                    for i, arg in enumerate(args)]
+            modified_kwargs = {
+                    field: mapper(field, arg)
+                    for field, arg in kwargs.items()}
+
+            return named_tuple(*modified_args, **modified_kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+class Number(Decimal):
+    def __repr__(self):
+        return str(self)
+
+
+@modify_args(Number)
 class Effect(NamedTuple):
-    start_val_boost: int
-    min_val_boost: int
-    max_val_boost: int
-    delta_boost: int
+    start_val_boost: Number
+    min_val_boost: Number
+    max_val_boost: Number
+    delta_boost: Number
 
+
+@modify_args(Number, ('affected_by',))
 class ParameterConf(NamedTuple):
-    start_val: int
-    min_val: int
-    max_val: int
-    delta: int
+    start_val: Number
+    min_val: Number
+    max_val: Number
+    delta: Number
     affected_by: List[Effect] = []
-    wait: int = 0
+    wait: Number = Number(0)
 
     def validate(self):
         if self.min_val > self.max_val:
@@ -27,11 +53,11 @@ class ParameterConf(NamedTuple):
 
 
 class Parameter:
-    curr_val: int
-    min: int
-    max: int
-    delta: int
-    wait: int
+    curr_val: Number
+    min: Number
+    max: Number
+    delta: Number
+    wait: Number
 
     def __init__(self, conf):
         conf.validate()
@@ -47,14 +73,14 @@ class Parameter:
             return 
         self.set_value(self.curr_val + self.delta)
 
-    def set_value(self, value: int):
+    def set_value(self, value: Number):
         if value < self.min:
             value = self.min
         elif value > self.max:
             value = self.max
         self.curr_val = value
 
-    def apply_delta(self, delta: int):
+    def apply_delta(self, delta: Number):
         self.set_value(self.curr_val + delta)
 
     def apply_effect(self, effect: Effect):
@@ -89,9 +115,6 @@ class ParameterHolder(dict):
         self.effects = set()
 
     def __setitem__(self, name: str, conf: ParameterConf):
-        if not isinstance(conf, ParameterConf):
-            raise ValueError(f'{conf} is not a ParameterConf')
-
         parameter = Parameter(conf)
         for effect in self.effects:
             if effect in conf.affected_by:
@@ -104,11 +127,11 @@ class ParameterHolder(dict):
             lock = ParameterHolder.ParameterLock(parameter)
         super().__setitem__(name, lock)
 
-    def change_param(self, name: str, value: int):
+    def change_param(self, name: str, value: Number):
         lock = self[name]
         lock.parameter.set_value(value)
 
-    def apply_delta(self, name: str, delta: int):
+    def apply_delta(self, name: str, delta: Number):
         lock = self[name]
         lock.parameter.apply_delta(delta)
 

@@ -1,17 +1,17 @@
 from Parameter import *
 from Tui import *
 
-#TODO add weapons to config. requires manual change
-
 FortificationEffect = Effect(2, 0, 2, 0)
 
 def cooldown(value: int, wait: int = 1):
     return ParameterConf(value, 0, value, -1, {FortificationEffect}, wait)
 
 holder = ParameterHolder()
+# Floats are to be input as strings, there will be things like
+# 3.3 -> 3.29999999999999982236431605997495353221893310546875 otherwise
 config = {
         'Heal': ConfigEntry('HP', ParameterConf(50, -100, 50, 5)),
-        'Shields': ConfigEntry('Shield', ParameterConf(35, 0, 35, 3)),
+        'Shields': ConfigEntry('Shield', ParameterConf(35, 0, 35, '3.3')),
 \
         'Carnage': ConfigEntry('Combat', cooldown(4)),
         'Conc shot': ConfigEntry('Combat', cooldown(3)),

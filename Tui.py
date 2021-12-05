@@ -48,10 +48,10 @@ class ActionHandler:
             return
 
         if is_delta:
-            int_value = int(value[1:])
+            int_value = Number(value[1:])
             self.holder.apply_delta(pool, int_value)
         else:
-            int_value = int(value)
+            int_value = Number(value)
             self.holder.change_param(pool, int_value)
 
     def run_action(self, action: str):
