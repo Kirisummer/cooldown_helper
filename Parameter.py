@@ -1,7 +1,6 @@
 #TODO check if works with float
 #TODO wrap with Decimal
 #TODO manual parameter change
-#TODO add parameter wait
 
 from typing import NamedTuple, List, Callable, Dict, Set, Tuple
 
@@ -17,6 +16,7 @@ class ParameterConf(NamedTuple):
     max_val: int
     delta: int
     affected_by: List[Effect] = []
+    wait: int = 0
 
     def validate(self):
         if self.min_val > self.max_val:
@@ -32,6 +32,7 @@ class Parameter:
     min: int
     max: int
     delta: int
+    wait: int
 
     def __init__(self, conf):
         conf.validate()
@@ -39,8 +40,13 @@ class Parameter:
         self.min = conf.min_val
         self.max = conf.max_val
         self.delta = conf.delta
+        self.wait = conf.wait
 
     def next_action(self):
+        if self.wait:
+            self.wait -= 1
+            return 
+
         next_val = self.curr_val + self.delta
         if next_val < self.min:
             next_val = self.min
@@ -55,7 +61,7 @@ class Parameter:
         self.delta += effect.delta_boost
 
     def __repr__(self):
-        return f'[{self.curr_val}, {self.min}-{self.max}, {self.delta}]'
+        return f'[{self.curr_val}, {self.min}-{self.max}, {self.delta}, {self.wait}]'
 
 
 class ParameterHolder(dict):

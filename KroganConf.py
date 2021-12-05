@@ -5,8 +5,8 @@ from Tui import *
 
 FortificationEffect = Effect(2, 0, 2, 0)
 
-def cooldown(value: int):
-    return ParameterConf(value, 0, value, -1, {FortificationEffect})
+def cooldown(value: int, wait: int = 1):
+    return ParameterConf(value, 0, value, -1, {FortificationEffect}, wait)
 
 holder = ParameterHolder()
 config = {
@@ -16,12 +16,12 @@ config = {
         'Carnage': ConfigEntry('Combat', cooldown(4)),
         'Conc shot': ConfigEntry('Combat', cooldown(3)),
         'Fortification': ConfigEntry('Combat', cooldown(4), {FortificationEffect}),
-        'FortificationBoost': ConfigEntry('FortificationBoost', ParameterConf(4, 0, 4, -1), [], {FortificationEffect}),
+        'FortificationBoost': ConfigEntry('FortificationBoost', ParameterConf(4, 0, 4, -1, 1), [], {FortificationEffect}),
 \
         'Pull': ConfigEntry('Biotic', cooldown(3)),
         'Warp': ConfigEntry('Biotic', cooldown(2)),
 \
-        'ShieldBoost': ConfigEntry('ShieldBoost', cooldown(10)),
+        'ShieldBoost': ConfigEntry('ShieldBoost', cooldown(10, 2)),
         'FirstAid': ConfigEntry('FirstAid', cooldown(10)),
 }
 
