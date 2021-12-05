@@ -38,21 +38,21 @@ class Parameter:
         self.curr_val = conf.start_val
         self.min = conf.min_val
         self.max = conf.max_val
-        self.delta = conf.delta_val
+        self.delta = conf.delta
 
     def next_action(self):
-        next_val = self.curr_val + self.conf.delta
-        if next_val < self.conf.min_val:
-            next_val = self.conf.min_val
-        elif next_val > self.conf.max_val:
-            next_val = self.conf.max_val
+        next_val = self.curr_val + self.delta
+        if next_val < self.min:
+            next_val = self.min
+        elif next_val > self.max:
+            next_val = self.max
         self.curr_val = next_val
 
     def apply_effect(self, effect: Effect):
-        curr_val += effect.start_val_boost
-        min += effect.min_val_boost
-        max += effect.max_val_boost
-        delta += effect.delta_boost
+        self.curr_val += effect.start_val_boost
+        self.min += effect.min_val_boost
+        self.max += effect.max_val_boost
+        self.delta += effect.delta_boost
 
     def __repr__(self):
         return f'[{self.curr_val}, {self.min}-{self.max}, {self.delta}]'
@@ -111,12 +111,9 @@ class ParameterHolder(dict):
         super().__setitem__(name, lock.locked(is_locked))
 
 
-class HolderConfig(NamedTuple):
-    holder: ParameterHolder
-    parameters: Dict[str, Tuple[str, ParameterConf, List[Effect]]]
+class ConfigEntry(NamedTuple):
+    pool_name: str
+    config: ParameterConf
+    add_effects: Set[Effect] = set()
+    remove_effects: Set[Effect] = set()
 
-    def action(self, name: str):
-        pool_name, conf, effects = parameters[name]
-        holder[pool_name] = conf
-        for effect in effects:
-            holder.add_effect(effect)
