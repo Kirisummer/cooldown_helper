@@ -1,17 +1,21 @@
 from Parameter import *
 from Tui import *
+from math import floor
+
+LOCK = True
+UNLOCK = False
 
 def cooldown(value: int, wait: int = 1):
-    return ParameterConf(value, 0, value, -1, set(), wait)
+    return ParameterConf(value, 0, value, -1, UNLOCK, set(), wait)
 
 def ammo(max_value: int):
-    return ParameterConf(max_value, 0, max_value, max_value * 0.2)
+    return ParameterConf(max_value, 0, max_value, int(max_value * 0.2), LOCK)
 
 holder = ParameterHolder()
 config = {
-        'Heal': ConfigEntry('HP', ParameterConf(17, -100, 17, 0)),
-        'Shields': ConfigEntry('Shield', ParameterConf(10, 0, 10, '3.5')),
-        'Tech': ConfigEntry('TechPoints', ParameterConf(7, 0, 7, 1)),
+        'Heal': ConfigEntry('HP', ParameterConf(17, -100, 17, 0, LOCK)),
+        'Shields': ConfigEntry('Shield', ParameterConf(10, 0, 10, '3.5', LOCK)),
+        'Tech': ConfigEntry('TechPoints', ParameterConf(7, 0, 7, 1, LOCK)),
 \
         'Assasination': ConfigEntry('Combat', cooldown(5)),
         'Inferno grenade': ConfigEntry('Combat', cooldown(0)),

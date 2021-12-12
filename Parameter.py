@@ -1,4 +1,3 @@
-# TODO implement lock by default
 # TODO implement parameter change on action trigger
 
 from typing import NamedTuple, List, Callable, Dict, Set, Tuple
@@ -43,6 +42,7 @@ class ParameterConf(NamedTuple):
     min_val: Number
     max_val: Number
     delta: Number
+    is_locked: bool = False
     affected_by: List[Effect] = []
     wait: Number = Number(0)
 
@@ -127,7 +127,7 @@ class ParameterHolder(dict):
         if current is not None:
             lock = current.param(parameter)
         else:
-            lock = ParameterHolder.ParameterLock(parameter)
+            lock = ParameterHolder.ParameterLock(parameter, conf.is_locked)
         super().__setitem__(name, lock)
 
     def change_param(self, name: str, value: Number):
