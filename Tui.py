@@ -1,3 +1,5 @@
+from Parameter import *
+
 class ActionHandler:
     LOCK_ACTIONS = '!lock', '!l'
     UNLOCK_ACTIONS = '!unlock', '!ul'

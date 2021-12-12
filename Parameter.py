@@ -1,3 +1,6 @@
+# TODO implement lock by default
+# TODO implement parameter change on action trigger
+
 from typing import NamedTuple, List, Callable, Dict, Set, Tuple
 from decimal import Decimal
 
