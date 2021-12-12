@@ -76,7 +76,7 @@ class Tui:
     def print_holder(self):
         print('{')
         for pool, lock in self.handler.holder.items():
-            locked = 'Locked' if lock.is_locked else ''
+            locked = '🔒' if lock.is_locked else ''
             print('\t', pool, ':', lock.parameter, locked)
         print('}')
 
