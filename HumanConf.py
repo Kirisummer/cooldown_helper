@@ -20,8 +20,8 @@ config = {
         'Shields': ConfigEntry('Shields', shield(10)),
         'Tech': ConfigEntry('TechPoints', ParameterConf(7, 0, 7, 1, LOCK)),
 \
-        'Assasination': ConfigEntry('Combat', cooldown(5)),
-        'Inferno grenade': ConfigEntry('Combat', cooldown(0)),
+        'Assasination': ConfigEntry('Combat', cooldown(5, 0)),
+        'Inferno grenade': ConfigEntry('Combat', cooldown(0, 0)),
 \
         'Hacking': ConfigEntry('Tech', cooldown(4)),
         'Overload': ConfigEntry('Tech', cooldown(3)),
@@ -32,8 +32,8 @@ config = {
         'FirstAid': ConfigEntry('FirstAid', cooldown(10)),
 \
         'Sniper': ConfigEntry('Sniper', ParameterConf(10, 0, 10, -1)), # Cooldown
-        'Rifle': ConfigEntry('Rifle', ammo(30)), #TODO change rifle ammo amount
-        'Pistol': ConfigEntry('Pistol', ammo(15)), #TODO change pistol ammo amount
+        'Rifle': ConfigEntry('Rifle', ammo(30)),
+        'Pistol': ConfigEntry('Pistol', ammo(15)),
 }
 
 action_handler = ActionHandler(holder, config, ['Heal', 'Shields', 'Tech', 'Rifle', 'Pistol'])
