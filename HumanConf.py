@@ -12,12 +12,12 @@ def ammo(max_value: int):
     return ParameterConf(max_value, 0, max_value, int(max_value * 0.2), LOCK)
 
 def shield(max_value: int):
-    return ParameterConf(max_value, 0. max_value, str(max_value * 0.2), LOCK)
+    return ParameterConf(max_value, 0, max_value, str(max_value * 0.2), LOCK)
 
 holder = ParameterHolder()
 config = {
         'Heal': ConfigEntry('HP', ParameterConf(17, -100, 17, 0, LOCK)),
-        'Shields': shield(10),
+        'Shields': ConfigEntry('Shields', shield(10)),
         'Tech': ConfigEntry('TechPoints', ParameterConf(7, 0, 7, 1, LOCK)),
 \
         'Assasination': ConfigEntry('Combat', cooldown(5)),
@@ -36,6 +36,6 @@ config = {
         'Pistol': ConfigEntry('Pistol', ammo(15)), #TODO change pistol ammo amount
 }
 
-action_handler = ActionHandler(holder, config, ['Heal', 'Shields', 'Tech', 'Sniper', 'Rifle', 'Pistol'])
+action_handler = ActionHandler(holder, config, ['Heal', 'Shields', 'Tech', 'Rifle', 'Pistol'])
 tui = Tui(action_handler)
 tui.run()
