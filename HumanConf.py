@@ -11,7 +11,7 @@ holder = ParameterHolder()
 config = {
         'Heal': ConfigEntry('HP', ParameterConf(17, -100, 17, 0)),
         'Shields': ConfigEntry('Shield', ParameterConf(10, 0, 10, '3.5')),
-        'Tech': ConfigEntry('TechPoints', ParameterConf(7, 0, 7, 0)),
+        'Tech': ConfigEntry('TechPoints', ParameterConf(7, 0, 7, 1)),
 \
         'Assasination': ConfigEntry('Combat', cooldown(5)),
         'Inferno grenade': ConfigEntry('Combat', cooldown(0)),
@@ -29,6 +29,6 @@ config = {
         'Pistol': ConfigEntry('Pistol', ammo(15)), #TODO change pistol ammo amount
 }
 
-action_handler = ActionHandler(holder, config, ['Heal', 'Shields', 'Shotgun', 'Rifle', 'Pistol'])
+action_handler = ActionHandler(holder, config, ['Heal', 'Shields', 'Tech', 'Sniper', 'Rifle', 'Pistol'])
 tui = Tui(action_handler)
 tui.run()
